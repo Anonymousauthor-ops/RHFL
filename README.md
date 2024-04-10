@@ -22,16 +22,23 @@ We have integrated JSHFL with the following model architectures:
 - Other Python libraries as listed in `requirements.txt`
 - To set up the environment and install the required dependencies, follow these steps:
   ```bash
-git clone https://github.com/yourusername/JSHFL.git
-cd JSHFL
-pip install -r requirements.txt
+  git clone https://github.com/yourusername/JSHFL.git
+  cd JSHFL
+  pip install -r requirements.txt
   
-### Training JSHFL
-To set up the environment and install the required dependencies, follow these steps:
+## Training JSHFL
 
+There are two ways to run the training process for JSHFL. First, navigate to the appropriate directory:
 
+```bash
+cd JSHFL/fedml_experiments/standalone/fedavg/
 
+Method 1:
+Run the training using the run_for_methods_attacks.sh script:
+bash run_for_methods_attacks.sh
 
+Method 2:
+Alternatively, you can use the run_fedavg_standalone_pytorch.sh script with specific parameters:
 
-
+sh run_fedavg_standalone_pytorch.sh 0 100 10 8 mnist "mnist" cnn hetero 100 10 0.001 sgd 0 30 JSHFL gaussian
 
