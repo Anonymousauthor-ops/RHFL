@@ -41,22 +41,18 @@ class RNN_OriginalFedAvg1(nn.Module):
     def __init__(self, INPUT_SIZE=28, HIDDEN_SIZE=128, NUM_CLASSES = 10):
         super(RNN_OriginalFedAvg1, self).__init__()
 
-        self.rnn = nn.LSTM(  # LSTM 效果要比 nn.RNN() 好多了
-            input_size=INPUT_SIZE,  # 图片每行的数据像素点
-            hidden_size=HIDDEN_SIZE,  # rnn hidden unit
-            num_layers=1,  # 有几层 RNN layers
-            batch_first=True,  # input & output 会是以 batch size 为第一维度的特征集 e.g. (batch, time_step, input_size)
+        self.rnn = nn.LSTM(  
+            input_size=INPUT_SIZE,  
+            hidden_size=HIDDEN_SIZE,  
+            num_layers=1,  
+            batch_first=True,  
         )
 
-        self.out = nn.Linear(HIDDEN_SIZE*28, NUM_CLASSES)  # 输出层，全连接
+        self.out = nn.Linear(HIDDEN_SIZE*28, NUM_CLASSES)  
 
     def forward(self, x):
         x = x.view((-1, 28, 28))
-        # x shape (batch, time_step, input_size)
-        # r_out shape (batch, time_step, output_size)
-        # h_n shape (n_layers, batch, hidden_size)   LSTM 有两个 hidden states, h_n 是分线, h_c 是主线
-        # h_c shape (n_layers, batch, hidden_size)
-        r_out, (h_n, h_c) = self.rnn(x, None)  # None 表示 hidden state 会用全0的 state
+        r_out, (h_n, h_c) = self.rnn(x, None)  
         hidden2one_res = []
         for i in range(28):
             hidden2one_res.append(r_out[:, i, :])
@@ -65,30 +61,6 @@ class RNN_OriginalFedAvg1(nn.Module):
         res = F.softmax(res, dim=1)
         # print('res------------------------------', res)
         return res
-
-        # 这个地方选择lstm_output[-1]，也就是相当于最后一个输出，因为其实每一个cell（相当于图中的A）都会有输出，但是我们只关心最后一个
-        # 选取最后一个时间点的 r_out 输出
-        # 这里 r_out[:, -1, :] 的值也是 h_n 的值
-        # out = self.out(r_out[:, -1, :])  # torch.Size([64, 28, 64])-> torch.Size([64, 10])
-        # return out
-
-# class RNN_OriginalFedAvg1(nn.Module):
-#     def __init__(self, input_size: int = 28, hidden_size: int = 64, num_layers: int = 4, output_size: int = 10):
-#         super(RNN_OriginalFedAvg1, self).__init__()
-#         self.main = nn.LSTM(
-#             input_size=input_size,
-#             hidden_size=hidden_size,
-#             num_layers=num_layers,
-#             batch_first=True,
-#         )
-#         self.fc = nn.Linear(hidden_size, output_size)
-#
-#     def forward(self, x):
-#         x = x.view((-1, 28, 28))
-#         output, (hn, cn) = self.main(x, None)
-#         result = self.fc(output[:, -1, :])
-#         return result
-
 
 class RNN_StackOverFlow(nn.Module):
     """Creates a RNN model using LSTM layers for StackOverFlow (next word prediction task).
