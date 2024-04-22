@@ -42,8 +42,8 @@ def read_data(train_data_dir, test_data_dir):
     groups = []
     train_data = {}
     test_data = {}
-    data_size_bid = []  # by zsh
-    num_sample_data = []  # by zsh
+    data_size_bid = [] 
+    num_sample_data = []  
 
     train_files = os.listdir(train_data_dir)
     train_files = [f for f in train_files if f.endswith('.json')]
@@ -54,11 +54,10 @@ def read_data(train_data_dir, test_data_dir):
         clients.extend(cdata['users'])
         if 'hierarchies' in cdata:
             groups.extend(cdata['hierarchies'])
-        train_data.update(cdata['user_data'])   # 所有的训练数据
-        data_size_bid = size_bid(cdata['num_samples'])  # 将每个人data size转换为bid
-        print("data_size_bid的长度和类型是什么", len(data_size_bid), type(data_size_bid))
+        train_data.update(cdata['user_data'])   
+        data_size_bid = size_bid(cdata['num_samples'])  
         num_sample_data = cdata['num_samples']
-        print('num_sample_data的内容:', len(num_sample_data), type(num_sample_data))
+        print('num_sample_data:', len(num_sample_data), type(num_sample_data))
 
     test_files = os.listdir(test_data_dir)
     test_files = [f for f in test_files if f.endswith('.json')]
@@ -70,11 +69,10 @@ def read_data(train_data_dir, test_data_dir):
 
     clients = sorted(cdata['users'])
 
-    # data_size_bid and num_sample_data  add by zsh
+    
     return clients, groups, train_data, test_data,  data_size_bid, num_sample_data
 
 
-# 专门为了能用data_size_bid这个函数的
 def read_data1(train_data_dir, test_data_dir):
     '''parses data in given train and test data directories
     assumes:
@@ -99,13 +97,13 @@ def read_data1(train_data_dir, test_data_dir):
         file_path = os.path.join(train_data_dir, f)
         with open(file_path, 'r') as inf:
             cdata = json.load(inf)
-        # print("cdatas是什么", type(cdata), cdata.keys(), "num_samplesnum_samples",cdata['num_samples'],"求解", sum(cdata['num_samples']), 'users:::::',cdata['users'] ) #'user_data'
+        # print("cdatas", type(cdata), cdata.keys(), "num_samplesnum_samples",cdata['num_samples'], sum(cdata['num_samples']), 'users:::::',cdata['users'] ) #'user_data'
         clients.extend(cdata['users'])
         if 'hierarchies' in cdata:
             groups.extend(cdata['hierarchies'])
         train_data.update(cdata['user_data'])
-        data_size_bid = size_bid(cdata['num_samples'])  # 将每个人data size转换为bid
-        print("data_size_bid的长度和类型是什么", len(data_size_bid), type(data_size_bid),"数据", data_size_bid)
+        data_size_bid = size_bid(cdata['num_samples'])  
+       
 
     test_files = os.listdir(test_data_dir)
     test_files = [f for f in test_files if f.endswith('.json')]
@@ -115,15 +113,14 @@ def read_data1(train_data_dir, test_data_dir):
             cdata = json.load(inf)
         test_data.update(cdata['user_data'])
     clients = sorted(cdata['users'])
-    return clients, groups, train_data, test_data, data_size_bid  # data_size_bid add by zsh
+    return clients, groups, train_data, test_data, data_size_bid  # data_size_bid 
 
 
-# add by zsh根据归一化结果，抽取bid，即bid与data size关联
+
 def size_bid(size_normal):
     data = size_normalization(size_normal)
     size_normalization_bid = []
-    np.random.seed(0)  # 随机种子，确保用户在整个过程中的报价不变。后续如果想要每一次迭代都想要重新选择clients,可以改变seed让其随round_id变化
-    # 原来的定价规则
+    np.random.seed(0)
     for i in data:
         if 0<=i and i<= 0.3:
             bid = np.random.uniform(1, 3)
@@ -136,7 +133,6 @@ def size_bid(size_normal):
         size_normalization_bid.append(bid)
     return size_normalization_bid
 
-# data size归一化
 def size_normalization(data):
     _range = np.max(data) - np.min(data)
     size_normal = (data - np.min(data)) / _range
@@ -177,11 +173,11 @@ def load_partition_data_mnist_by_device_id(batch_size,
     test_path += '/' + device_id + '/' + 'test'
     return load_partition_data_mnist(batch_size, train_path, test_path)
 
-# 修改
+
 import gzip
 
 def load_data(data_folder, data_name, label_name):
-    with gzip.open(os.path.join(data_folder, label_name), 'rb') as lbpath:  # rb表示的是读取二进制数据
+    with gzip.open(os.path.join(data_folder, label_name), 'rb') as lbpath:  
         y_train = np.frombuffer(lbpath.read(), np.uint8, offset=8)
 
     with gzip.open(os.path.join(data_folder, data_name), 'rb') as imgpath:
@@ -196,16 +192,14 @@ def getlist_num(user_num, train_true=True):
     for i in range(user_num):
         np.random.seed(i)
         if train_true:
-            a = np.random.randint(300, 900, 1).tolist()[0]  # 抽取范围，每个client对应划分的数据量
+            a = np.random.randint(300, 900, 1).tolist()[0]  
         else:
             a = np.random.randint(50, 140, 1).tolist()[0]
         list_num.append(a)
     return list_num
 
 def  changedata(traindata,trainlabel,indexlist,usernum,train_true=True):
-    # /获取用户数据量
     listnum=getlist_num(usernum, train_true)
-    #构建数据
     userdict={}
     k=0
     user=0
@@ -231,17 +225,16 @@ def read_datamy(args):
                                        "t10k-labels-idx1-ubyte.gz")
     data = np.r_[train_data, test_data]
     lable = np.r_[train_lable, test_lable]
-    # print('-----data的类型', (data.reshape(70000, 784)).shape)
     data = size_normalization(data)
     scaler = preprocessing.StandardScaler()
     data = scaler.fit_transform(data.reshape(70000, 784))
     data = data.reshape(70000, 28, 28)
     # print('--------data', data.shape, data)
-    # 打乱的索引序列
+
     np.random.seed(0)
-    permutation = np.random.permutation(lable.shape[0])  # 7万都打乱
+    permutation = np.random.permutation(lable.shape[0])  
     # print('permutation-----',len(permutation))
-    validate_datasets = 0.875  # 训练和测试划分比例
+    validate_datasets = 0.875  
     train_indexs = permutation[:int(lable.shape[0] * validate_datasets)]  # 0-63000
     # print('train_indexs------', len(train_indexs))
     validate_indexs = permutation[int(lable.shape[0] * validate_datasets):]  # 63000-
@@ -251,12 +244,12 @@ def read_datamy(args):
     test_dataset,test_sample_nums = changedata(data, lable, validate_indexs, usernum, train_true=False)
     data_size_bid = size_bid(train_sample_num)
     # groups = []
-    return train_dataset.keys(), [], train_dataset, test_dataset, data_size_bid, train_sample_num  # data_size_bid add by zsh
+    return train_dataset.keys(), [], train_dataset, test_dataset, data_size_bid, train_sample_num  
 
 def load_partition_data_mnist(args):
     print('args', args)
     batch_size = args.batch_size
-    users, groups, train_data, test_data, data_size_bid, num_sample_data = read_datamy(args)  # 读数据函数return中加了data_size_bid,冲突了
+    users, groups, train_data, test_data, data_size_bid, num_sample_data = read_datamy(args)  
     # print("users----------", users)
 
     if len(groups) == 0:
@@ -266,7 +259,7 @@ def load_partition_data_mnist(args):
     train_data_local_dict = dict()
     test_data_local_dict = dict()
     train_data_local_num_dict = dict()
-    train_data_global = list()  # 把用户个人的数据都放在这个
+    train_data_global = list()  
     test_data_global = list()
     client_idx = 0
     logging.info("loading data...")
@@ -282,7 +275,7 @@ def load_partition_data_mnist(args):
         # print("train_batch------------------", train_batch)
         test_batch = batch_data(test_data[u], batch_size)
         # index using client index
-        train_data_local_dict[client_idx] = train_batch  # 1000中的client_idx与1000
+        train_data_local_dict[client_idx] = train_batch  
         # print("train_batch________",len(train_batch))
         test_data_local_dict[client_idx] = test_batch
         train_data_global += train_batch
@@ -291,8 +284,6 @@ def load_partition_data_mnist(args):
     logging.info("finished the loading data")
     client_num = client_idx
     class_num = 10
-    print("train_data_global+++++++", len(train_data_global),len(users))
-    # print("groups----------", groups)
 
     return client_num, train_data_num, test_data_num, train_data_global, test_data_global, \
            train_data_local_num_dict, train_data_local_dict, test_data_local_dict, class_num, data_size_bid, num_sample_data
