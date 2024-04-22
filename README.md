@@ -1,4 +1,5 @@
-# JSHFL: Defending Against Poisoning Attacks in Hierarchical Federated Learning by Utilizing Jensen-Shannon Divergence
+# JSHFL: 
+# Defending Against Poisoning Attacks in Hierarchical Federated Learning by Utilizing Jensen-Shannon Divergence
 
 ## Overview
 This repository contains the official implementation of JSHFL as described in the paper "Defending Against Poisoning Attacks in Hierarchical Federated Learning by Utilizing Jensen-Shannon Divergence". Our method leverages the Jensen-Shannon Divergence to enhance the robustness of hierarchical federated learning systems against various untargeted malcious poisoning attacks. Furthermore, JSHFL enhances the robustness of the aggregation process by applying a survival-of-the-fittest rule to regulate the aggregation weights at the edge server.
