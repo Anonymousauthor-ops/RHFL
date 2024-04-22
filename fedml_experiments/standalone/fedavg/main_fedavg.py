@@ -130,7 +130,7 @@ def load_data(args, dataset_name):
     args_batch_size = args.batch_size
     if args.batch_size <= 0:
         full_batch = True
-        args.batch_size = 128  # temporary batch size
+        args.batch_size = 128  
     else:
         full_batch = False
 
@@ -297,7 +297,7 @@ def create_model(args, model_name, output_dim):
     elif model_name == "cnn" and args.dataset == "femnist":
         logging.info("CNN + FederatedEMNIST")
         model = CNN_DropOut(False)
-    elif model_name == "cnn" and args.dataset == "mnist":  # by zsh
+    elif model_name == "cnn" and args.dataset == "mnist":  
         logging.info("CNN + MNIST")
         model = CNN_DropOut1(True)
     elif model_name == "resnet18_gn" and args.dataset == "fed_cifar100":
