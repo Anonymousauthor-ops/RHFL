@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-GPU=$1  # 1
+GPU=$1  
 
-CLIENT_NUM=$2  # 宗的1000人  2
+CLIENT_NUM=$2  
 
-WORKER_NUM=$3 # 1000人挑出5人  3
+WORKER_NUM=$3 
 
-BATCH_SIZE=$4  # 每批数据量的大小  4
+BATCH_SIZE=$4  
 
-DATASET=$5  # 5
+DATASET=$5  
 
 DATA_PATH=$6
 
